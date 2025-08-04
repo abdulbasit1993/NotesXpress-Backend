@@ -220,6 +220,15 @@ const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    if (user.status !== 'ACTIVE') {
+      res.status(403).json({
+        success: false,
+        message:
+          'Account is inactive. Please contact admin to activate your account',
+      });
+      return;
+    }
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
@@ -275,4 +284,5 @@ const login = async (req: Request, res: Response): Promise<void> => {
 
 module.exports = {
   signup,
+  login,
 };
