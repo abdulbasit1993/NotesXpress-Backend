@@ -38,6 +38,19 @@ const signup = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    let userRole = role;
+    if (!userRole) {
+      userRole = 'USER';
+    } else {
+      const validRoles = Object.values(UserRole);
+      if (!validRoles.includes(userRole)) {
+        res.status(400).json({
+          success: false,
+          message: `Invalid role type.`,
+        });
+      }
+    }
+
     const emailRegex =
       /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:\\[\x00-\x7F]|[^\\"])*")@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
 
@@ -67,9 +80,6 @@ const signup = async (req: Request, res: Response): Promise<void> => {
 
       return;
     }
-
-    const userRole: UserRole =
-      role && ['USER', 'ADMIN'].includes(role) ? role : 'USER';
 
     const usersCollection = db.collection<User>('users');
 
@@ -102,7 +112,7 @@ const signup = async (req: Request, res: Response): Promise<void> => {
       username: username,
       email: email.toLowerCase(),
       password: hashedPassword,
-      role: userRole,
+      role: role,
       status: 'ACTIVE',
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -142,6 +152,7 @@ const signup = async (req: Request, res: Response): Promise<void> => {
         username: newUser.username,
         email: newUser.email,
         role: newUser.role,
+        status: newUser.status,
         createdAt: newUser.createdAt,
         updatedAt: newUser.updatedAt,
       },

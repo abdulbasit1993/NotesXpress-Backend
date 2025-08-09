@@ -1,9 +1,11 @@
+import { ObjectId } from 'mongodb';
+
 export type UserRole = 'USER' | 'ADMIN';
 
 export type UserStatus = 'ACTIVE' | 'INACTIVE';
 
 export interface User {
-  _id?: string;
+  _id?: ObjectId | string;
   username: string;
   email: string;
   password: string;
