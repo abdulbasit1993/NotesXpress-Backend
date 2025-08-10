@@ -12,6 +12,6 @@
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "types": ["node", "express"]
   },
-  "include": ["src/**/*", "types/**/*"],
+  "include": ["src/**/*", "types/**/*", "docs/swagger.json"],
   "exclude": ["node_modules"]
 }
