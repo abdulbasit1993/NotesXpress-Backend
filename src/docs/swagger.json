@@ -75,6 +75,18 @@
         "responses": {}
       }
     },
+    "/api/auth/profile": {
+      "get": {
+        "tags": ["Auth"],
+        "description": "Get the User Profile",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {}
+      }
+    },
     "/api/admin/users/getAll": {
       "get": {
         "tags": ["Admin - Users"],

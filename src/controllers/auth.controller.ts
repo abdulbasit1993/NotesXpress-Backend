@@ -2,6 +2,7 @@ import database from '../config/db';
 import { Request, Response } from 'express';
 import { User } from '../types/user';
 import { emailRegex, roleTypes } from '../constants';
+import { ObjectId } from 'mongodb';
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -296,7 +297,57 @@ const login = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const getUserProfile = async (
+  req: Request & {
+    user?: {
+      userId?: string;
+    };
+  },
+  res: Response,
+): Promise<void> => {
+  try {
+    const db = database.getDb();
+
+    const usersCollection = db.collection<User>('users');
+
+    const user = await usersCollection.findOne({
+      _id: new ObjectId(req?.user?.userId),
+    });
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      data: {
+        id: user._id!.toString(),
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
+    });
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error occured';
+
+    res.status(500).json({
+      message: 'Internal server error',
+      error: errorMessage,
+    });
+  }
+};
+
 module.exports = {
   signup,
   login,
+  getUserProfile,
 };
