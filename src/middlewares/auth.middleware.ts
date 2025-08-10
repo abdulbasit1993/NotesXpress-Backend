@@ -23,7 +23,6 @@ const verifyToken = (
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('Decoded JWT =====>>> ', decoded);
     req.user = decoded;
     next();
   } catch (error) {
@@ -49,8 +48,6 @@ const isAdmin = async (
     const user = await usersCollection.findOne({
       _id: new ObjectId(req?.user?.userId),
     });
-
-    console.log('User found =====>>> ', user);
 
     if (!user) {
       return res.status(404).json({

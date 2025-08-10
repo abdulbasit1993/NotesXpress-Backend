@@ -1,6 +1,7 @@
 import database from '../config/db';
 import { Request, Response } from 'express';
-import { User, UserRole } from '../types/user';
+import { User } from '../types/user';
+import { emailRegex, roleTypes } from '../constants';
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -10,8 +11,11 @@ const signup = async (req: Request, res: Response): Promise<void> => {
     const db = database.getDb();
     const { username, password, email, role } = req.body;
 
+    const sanitizedUsername = username.trim();
+    const sanitizedEmail = email.trim();
+
     // Input validation
-    if (!username) {
+    if (!sanitizedUsername) {
       res.status(400).json({
         success: false,
         message: 'Username is required',
@@ -29,7 +33,7 @@ const signup = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    if (!email) {
+    if (!sanitizedEmail) {
       res.status(400).json({
         success: false,
         message: 'Email is required',
@@ -42,19 +46,17 @@ const signup = async (req: Request, res: Response): Promise<void> => {
     if (!userRole) {
       userRole = 'USER';
     } else {
-      const validRoles = Object.values(UserRole);
-      if (!validRoles.includes(userRole)) {
+      if (!roleTypes.includes(userRole)) {
         res.status(400).json({
           success: false,
           message: `Invalid role type.`,
         });
+
+        return;
       }
     }
 
-    const emailRegex =
-      /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:\\[\x00-\x7F]|[^\\"])*")@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
-
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(sanitizedEmail)) {
       res.status(400).json({
         success: false,
         message: 'Invalid email format',
@@ -72,7 +74,7 @@ const signup = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    if (username.length < 3) {
+    if (sanitizedUsername.length < 3) {
       res.status(400).json({
         success: false,
         message: 'Username must be at least 3 characters long',
@@ -85,10 +87,10 @@ const signup = async (req: Request, res: Response): Promise<void> => {
 
     const existingUser = await usersCollection.findOne({
       $or: [
-        { email: email.toLowerCase() },
+        { email: sanitizedEmail.toLowerCase() },
         {
           username: {
-            $regex: new RegExp(`^${username}$`, 'i'),
+            $regex: new RegExp(`^${sanitizedUsername}$`, 'i'),
           },
         },
       ],
@@ -96,7 +98,9 @@ const signup = async (req: Request, res: Response): Promise<void> => {
 
     if (existingUser) {
       const field =
-        existingUser.email === email.toLowerCase() ? 'email' : 'username';
+        existingUser.email === sanitizedEmail.toLowerCase()
+          ? 'email'
+          : 'username';
       res.status(409).json({
         success: false,
         message: `User with this ${field} already exists`,
@@ -109,8 +113,8 @@ const signup = async (req: Request, res: Response): Promise<void> => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const newUser: User = {
-      username: username,
-      email: email.toLowerCase(),
+      username: sanitizedUsername,
+      email: sanitizedEmail.toLowerCase(),
       password: hashedPassword,
       role: role,
       status: 'ACTIVE',
@@ -186,7 +190,9 @@ const login = async (req: Request, res: Response): Promise<void> => {
     const db = database.getDb();
     const { email, password } = req.body;
 
-    if (!email) {
+    const sanitizedEmail = email.trim();
+
+    if (!sanitizedEmail) {
       res.status(400).json({
         success: false,
         message: 'Email is required',
@@ -204,10 +210,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const emailRegex =
-      /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:\\[\x00-\x7F]|[^\\"])*")@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
-
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(sanitizedEmail)) {
       res.status(400).json({
         success: false,
         message: 'Invalid email format',
@@ -219,7 +222,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
     const usersCollection = db.collection<User>('users');
 
     const user = await usersCollection.findOne({
-      email: email.toLowerCase(),
+      email: sanitizedEmail.toLowerCase(),
     });
 
     if (!user) {
