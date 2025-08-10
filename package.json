@@ -4,7 +4,7 @@
   "description": "Backend for NotesXpress, a simple and modern note-taking application.",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp -R src/docs dist/docs",
     "start": "node dist/app.js",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/app.ts",
     "lint": "eslint 'src/**/*.ts'"
