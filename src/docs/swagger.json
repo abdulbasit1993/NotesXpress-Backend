@@ -204,6 +204,33 @@
         ],
         "responses": {}
       }
+    },
+    "/api/notes/add": {
+      "post": {
+        "tags": ["User - Notes"],
+        "description": "Add a new note",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "The title of the note"
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "The content of the note"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
     }
   },
   "components": {
