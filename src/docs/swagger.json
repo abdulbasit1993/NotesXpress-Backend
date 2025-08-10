@@ -1,0 +1,206 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "NotesXpress APIs",
+    "version": "1.0.0",
+    "description": "NotesXpress Note Taking Application API Documentation"
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "paths": {
+    "/api/auth/signup": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "User Signup",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "The username of the user"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "The email of the user"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "description": "The password for the new user"
+                  }
+                },
+                "required": ["username", "email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "User Login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "The email of the user"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "description": "The password of the user"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/api/admin/users/getAll": {
+      "get": {
+        "tags": ["Admin - Users"],
+        "description": "Get All the Users",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Search term to filter users by email or username",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/admin/users/get/{id}": {
+      "get": {
+        "tags": ["Admin - Users"],
+        "description": "Get the User Details by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/admin/users/update/{id}": {
+      "patch": {
+        "tags": ["Admin - Users"],
+        "description": "Update the User by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "Abrar Tahir"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "abrar123@gmail.com"
+                  },
+                  "status": {
+                    "type": "string",
+                    "example": "ACTIVE",
+                    "enum": ["ACTIVE", "INACTIVE"]
+                  },
+                  "role": {
+                    "type": "string",
+                    "example": "USER"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/api/admin/users/delete/{id}": {
+      "delete": {
+        "tags": ["Admin - Users"],
+        "description": "Delete the User by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {}
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
