@@ -209,6 +209,11 @@
       "post": {
         "tags": ["User - Notes"],
         "description": "Add a new note",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
