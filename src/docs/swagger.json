@@ -236,6 +236,115 @@
         },
         "responses": {}
       }
+    },
+    "/api/notes/getAll": {
+      "get": {
+        "tags": ["User - Notes"],
+        "description": "Get All the User Notes",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Search term to filter notes by title or content",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/notes/get/{id}": {
+      "get": {
+        "tags": ["User - Notes"],
+        "description": "Get the Note Details by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/notes/update/{id}": {
+      "patch": {
+        "tags": ["User - Notes"],
+        "description": "Update the Note by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Updated note title"
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "Updated note content"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/api/notes/delete/{id}": {
+      "delete": {
+        "tags": ["User - Notes"],
+        "description": "Delete the Note by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {}
+      }
     }
   },
   "components": {
