@@ -225,7 +225,7 @@ const updateNote = async (req: Request, res: Response): Promise<void> => {
 
     const updatedNote = {
       title: title || note.title,
-      email: content || note.content,
+      content: content || note.content,
       updatedAt: new Date(),
     };
 
