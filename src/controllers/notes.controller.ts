@@ -229,9 +229,16 @@ const updateNote = async (req: Request, res: Response): Promise<void> => {
       updatedAt: new Date(),
     };
 
-    const result = await notesCollection.updateOne(
-      { _id: new ObjectId(id) },
-      { $set: updatedNote },
+    const result = await notesCollection.findOneAndUpdate(
+      {
+        _id: new ObjectId(id),
+      },
+      {
+        $set: updatedNote,
+      },
+      {
+        returnDocument: 'after',
+      },
     );
 
     res.status(200).json({

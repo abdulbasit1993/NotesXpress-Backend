@@ -283,7 +283,7 @@
       }
     },
     "/api/notes/update/{id}": {
-      "patch": {
+      "put": {
         "tags": ["User - Notes"],
         "description": "Update the Note by id",
         "security": [
