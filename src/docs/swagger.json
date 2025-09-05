@@ -205,6 +205,18 @@
         "responses": {}
       }
     },
+    "/api/users/user-stats": {
+      "get": {
+        "tags": ["Users"],
+        "description": "Get the User Stats",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {}
+      }
+    },
     "/api/notes/add": {
       "post": {
         "tags": ["User - Notes"],
