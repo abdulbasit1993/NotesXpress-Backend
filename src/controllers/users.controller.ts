@@ -1,16 +1,10 @@
 import database from '../config/db';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { Note } from '../types/note';
-import { Filter, ObjectId } from 'mongodb';
+import { Filter } from 'mongodb';
+import { AuthenticatedRequest } from '../types/user';
 
-const getUserStats = async (
-  req: Request & {
-    user?: {
-      userId?: string;
-    };
-  },
-  res: Response,
-) => {
+const getUserStats = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const db = database.getDb();
     const userId = req?.user?.userId;
@@ -81,6 +75,6 @@ const getUserStats = async (
   }
 };
 
-module.exports = {
+export = {
   getUserStats,
 };

@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-const usersController = require('../controllers/notes.controller');
+const usersController = require('../controllers/users.controller');
 const { verifyToken } = require('../middlewares/auth.middleware');
 
 const router = Router();
