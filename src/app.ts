@@ -4,8 +4,15 @@ import database from './config/db';
 const routes = require('./routes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./docs/swagger.json');
+const cors = require('cors');
 
 const app = express();
+
+app.use(
+  cors({
+    origin: '*',
+  }),
+);
 
 app.use(express.json());
 
